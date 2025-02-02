@@ -45,6 +45,7 @@ def graph_search(
     frontier.prepare(goal_description)
     expanded = set()
 
+
     # Clear the parent pointer and cost in order make sure that the initial state is a root node
     initial_state.parent = None
     initial_state.path_cost = 0
@@ -58,9 +59,10 @@ def graph_search(
         frontierNode = frontier.pop() #chooses node n and removes n from froniter
         print("Popped node: ")
         print(frontierNode)
+        iterations+= 1
         expanded.add(frontierNode)
         if goal_description.is_goal(frontierNode):
-            return (True, action_set, len(frontierNode.extract_plan()), (time.time() - start_time))
+            return (True, frontierNode.extract_plan(), iterations, (time.time() - start_time))
         possible_actions = frontierNode.get_applicable_actions(action_set)
         for action in possible_actions:
             possible_frontier_node = frontierNode.result(action) 
