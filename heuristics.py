@@ -40,20 +40,20 @@ class HospitalZeroHeuristic:
 class HospitalGoalCountHeuristics:
 
     def __init__(self):
-        raise NotImplementedError()
+        pass
 
 
     def preprocess(self, level: h_level.HospitalLevel):
         # This function will be called a single time prior 
         # to the search allowing us to preprocess the level such as
         # pre-computing lookup tables or other acceleration structures
-       raise NotImplementedError()
+       pass
     
     def h(self, state: h_state.HospitalState, 
                 goal_description: h_goal_description.HospitalGoalDescription) -> int:
         # your code here...
         hCount = 0
-        for (goal_position, goal_char, is_positive_literal) in self.goals:
+        for (goal_position, goal_char, is_positive_literal) in goal_description.goals:
             char = state.object_at(goal_position)
             if is_positive_literal and goal_char != char:
                 hCount += 1
@@ -64,13 +64,26 @@ class HospitalGoalCountHeuristics:
 class HospitalAdvancedHeuristics:
 
     def __init__(self):
-        raise NotImplementedError()
+        pass
 
     def preprocess(self, level: h_level.HospitalLevel):
         # This function will be called a single time prior to the search allowing us to preprocess the level such as
         # pre-computing lookup tables or other acceleration structures
-        raise NotImplementedError()
+        pass
 
     def h(self, state: h_state.HospitalState, goal_description: h_goal_description.HospitalGoalDescription) -> int:
-        # your heuristic goes here...      
-        raise NotImplementedError()
+        # Custom heuristic to calculate the manhatten distance between an agent and it's goal     
+        maxDist = 0
+        for goal_position, goal_char, _ in goal_description.agent_goals:
+            for agent_pos, agent_char in state.agent_positions:
+                if goal_char == agent_char:
+                    dist = pos_sub(goal_position, agent_pos)
+                    distSum =abs(dist[0]) + abs(dist[1])
+                if distSum > maxDist:
+                    maxDist = distSum
+        # for x in goal_description.box_goals:
+        #    dist = pos_sub(state.box_goal_positions[x], state.box_positions[x])
+        #    distSum = dist[0] + dist[1]
+        #    if distSum > maxDist:
+        #        maxDist = distSum
+        return maxDist
